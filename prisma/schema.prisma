@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(cuid())
+  firstName      String        @map("first_name")
+  lastName       String        @map("last_name")
+  email          String        @unique
+  password       String
+  phone          String        
+  age            Int 
+  isCompany      Boolean       @map("is_company")
+  
+  opportunities  Opportunity[] @relation("UserOpportunities")
+}
+
+model Opportunity {
+  id                String     @id @default(cuid())
+  userId            String
+  title             String
+  organizationName  String     @map("organization_name")
+  website           String
+  email             String
+  description       String
+  date              DateTime
+  typeWork          String     @map("type_work")
+  imageUrl          String     @map("image_url")
+  location          String
+
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @updatedAt @map("updated_at")
+
+  user              User       @relation("UserOpportunities", fields: [userId], references: [id])
+}
