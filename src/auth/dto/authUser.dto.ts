@@ -29,3 +29,14 @@ export class CreateUserDto {
   @IsBoolean({ message: 'isCompany must be a boolean value' })
   isCompany: boolean;
 }
+
+export type TUpdateUserDto = Partial<CreateUserDto>;
+
+export class LoginUserDto {
+  @IsEmail({}, { message: 'Invalid email format' })
+  email: string;
+
+  @IsString({ message: 'Password must be a string' })
+  @MinLength(6, { message: 'Password must be at least 6 characters long' })
+  password: string;
+}

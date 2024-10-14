@@ -1,12 +1,13 @@
 import {
   Body,
   Controller,
+  HttpCode,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserDto } from './dto/authUser.dto';
+import { CreateUserDto, LoginUserDto } from './dto/authUser.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -15,11 +16,10 @@ export class AuthController {
   @Post('/register')
   @UsePipes(new ValidationPipe())
   async registerUser(@Body() dto: CreateUserDto) {
-    const user = await this.authService.createUser(dto);
-    const { id, firstName, lastName, email } = user;
+    const user = await this.authService.registerUser(dto);
+    const { firstName, lastName, email } = user;
 
-    const newUser = {
-      id,
+    const data = {
       firstName,
       lastName,
       email,
@@ -28,7 +28,19 @@ export class AuthController {
     return {
       status: 201,
       message: 'Successfully create user',
-      data: newUser,
+      data,
+    };
+  }
+
+  @HttpCode(200)
+  @Post('/login')
+  @UsePipes(new ValidationPipe())
+  async loginUser(@Body() dto: LoginUserDto) {
+    const user = await this.authService.loginUser(dto);
+    return {
+      status: 200,
+      message: 'Successfully login user',
+      data: user,
     };
   }
 }
