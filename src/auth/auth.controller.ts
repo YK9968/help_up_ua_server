@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginUserDto } from './dto/authUser.dto';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,14 +17,7 @@ export class AuthController {
   @Post('/register')
   @UsePipes(new ValidationPipe())
   async registerUser(@Body() dto: CreateUserDto) {
-    const user = await this.authService.registerUser(dto);
-    const { firstName, lastName, email } = user;
-
-    const data = {
-      firstName,
-      lastName,
-      email,
-    };
+    const data = await this.authService.registerUser(dto);
 
     return {
       status: 201,
@@ -36,11 +30,22 @@ export class AuthController {
   @Post('/login')
   @UsePipes(new ValidationPipe())
   async loginUser(@Body() dto: LoginUserDto) {
-    const user = await this.authService.loginUser(dto);
+    const data = await this.authService.loginUser(dto);
     return {
       status: 200,
-      message: 'Successfully login user',
-      data: user,
+      message: `Successfully login user ${data.firstName}`,
+      data,
+    };
+  }
+
+  @Post('acces-token')
+  @UsePipes(new ValidationPipe())
+  async getNewTokens(@Body() dto: RefreshTokenDto) {
+    const data = await this.authService.getTokens(dto.refreshToken);
+    return {
+      status: 200,
+      message: 'Successfully get tokens',
+      data,
     };
   }
 }
