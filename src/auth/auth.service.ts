@@ -22,7 +22,7 @@ export class AuthService {
     if (!result) throw new UnauthorizedException(AppErrors.UNAUTHORIZE);
 
     const user = await this.userService.findUser(result.email);
-    const tokens = await this.issueTokens(user.email);
+    const tokens = await this.issueTokens(user.email, user.id);
 
     return { ...tokens };
   }
@@ -32,25 +32,25 @@ export class AuthService {
     if (isExists) throw new BadRequestException(AppErrors.USER_EXISTS);
 
     const user = await this.userService.createUser(dto);
-    const tokens = await this.issueTokens(user.email);
+    const tokens = await this.issueTokens(user.email, user.id);
 
     return { ...responseUserField(user), ...tokens };
   }
 
   async loginUser(dto: LoginUserDto) {
     const user = await this.userService.findUser(dto.email);
-    if (!user) throw new BadRequestException(AppErrors.NOT_FOUND);
+    if (!user) throw new BadRequestException(AppErrors.USER_NOT_FOUND);
 
     const validatePassword = await bcrypt.compare(dto.password, user.password);
     if (!validatePassword) throw new BadRequestException(AppErrors.WRONG_DATA);
 
-    const tokens = await this.issueTokens(user.email);
+    const tokens = await this.issueTokens(user.email, user.id);
 
     return { ...responseUserField(user), ...tokens };
   }
 
-  private async issueTokens(email: string) {
-    const data = { email };
+  private async issueTokens(email: string, id: string) {
+    const data = { email, id };
 
     const accessToken = this.jwtService.sign(data, {
       expiresIn: '1h',

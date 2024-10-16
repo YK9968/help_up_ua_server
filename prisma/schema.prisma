@@ -25,12 +25,12 @@ model Opportunity {
   userId            String
   title             String
   organizationName  String     @map("organization_name")
-  website           String
+  website           String?
   email             String
   description       String
   date              DateTime
   typeWork          String     @map("type_work")
-  imageUrl          String     @map("image_url")
+  imageUrl          String?    @map("image_url")
   location          String
 
   createdAt         DateTime   @default(now()) @map("created_at")
