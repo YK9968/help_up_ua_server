@@ -5,7 +5,12 @@ import { UserModule } from './user/user.module';
 import { OpportunitiesModule } from './opportunities/opportunities.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), AuthModule, UserModule, OpportunitiesModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    AuthModule,
+    UserModule,
+    OpportunitiesModule,
+  ],
   controllers: [],
   providers: [],
 })

@@ -11,17 +11,30 @@ import { AppErrors } from 'src/errors';
 export class OpportunitiesService {
   constructor(private readonly prisma: PrismaService) {}
 
+  private async findOpportunity(
+    id: string,
+    userId?: string,
+  ): Promise<Opportunity> {
+    const opportunity = await this.prisma.opportunity.findUnique({
+      where: userId ? { id, userId } : { id },
+    });
+    if (!opportunity) {
+      throw new BadRequestException(AppErrors.OPPORTUNITY_NOT_FOUND);
+    }
+    return opportunity;
+  }
+
   async getAllOpportunities(): Promise<Opportunity[]> {
     const opportunities = await this.prisma.opportunity.findMany();
     return opportunities;
   }
-  async getOpportunityById(id: string) {
-    const opportunities = await this.prisma.opportunity.findUnique({
-      where: { id },
-    });
+
+  async getOpportunityById(id: string): Promise<Opportunity> {
+    const opportunities = await this.findOpportunity(id);
     return opportunities;
   }
-  async getUserOpportunities(userId: string) {
+
+  async getUserOpportunities(userId: string): Promise<Opportunity[]> {
     const opportunities = await this.prisma.opportunity.findMany({
       where: { userId },
     });
@@ -29,51 +42,38 @@ export class OpportunitiesService {
     return opportunities;
   }
 
-  async createOpportunity(dto: CreateOpportunityDto, id: string) {
+  async createOpportunity(
+    dto: CreateOpportunityDto,
+    id: string,
+  ): Promise<Opportunity> {
     const date = dto.date ? new Date(dto.date) : undefined;
     const opportunities = await this.prisma.opportunity.create({
       data: {
         userId: id,
-        title: dto.title,
-        description: dto.description,
-        location: dto.location,
-        organizationName: dto.organizationName,
-        website: dto.website,
-        email: dto.email,
         date,
-        typeWork: dto.typeWork,
-        imageUrl: dto.imageUrl,
+        ...dto,
       },
     });
     return opportunities;
   }
+
   async updateOpportunity(
     dto: TUpdateOpportunityDto,
     userId: string,
     id: string,
-  ) {
-    const opportunity = await this.prisma.opportunity.findUnique({
-      where: { id, userId },
-    });
-    if (!opportunity) {
-      throw new BadRequestException(AppErrors.OPPORTUNITY_NOT_FOUND);
-    }
+  ): Promise<Opportunity> {
+    await this.findOpportunity(id, userId);
 
-    const newOpportunity = await this.prisma.opportunity.update({
+    const opportunity = await this.prisma.opportunity.update({
       where: { id, userId },
       data: { ...dto },
     });
 
-    return newOpportunity;
+    return opportunity;
   }
-  async deleteOpportunity(userId: string, id: string) {
-    const opportunity = await this.prisma.opportunity.findUnique({
-      where: { id, userId },
-    });
 
-    if (!opportunity) {
-      throw new BadRequestException(AppErrors.OPPORTUNITY_NOT_FOUND);
-    }
+  async deleteOpportunity(userId: string, id: string): Promise<void> {
+    await this.findOpportunity(id, userId);
 
     await this.prisma.opportunity.delete({
       where: { id, userId },

@@ -4,6 +4,7 @@ import { PrismaService } from 'prisma.service';
 import { CreateUserDto, TUpdateUserDto } from 'src/auth/dto/authUser.dto';
 import * as bcrypt from 'bcrypt';
 import { AppErrors } from 'src/errors';
+import { responseUserField } from 'src/config/responsUserField';
 
 @Injectable()
 export class UserService {
@@ -33,6 +34,6 @@ export class UserService {
       data: { ...dto },
     });
 
-    return newUser;
+    return { ...responseUserField(newUser) };
   }
 }
