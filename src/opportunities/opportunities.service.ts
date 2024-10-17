@@ -21,7 +21,14 @@ export class OpportunitiesService {
     });
     return opportunities;
   }
-  async getAllUserOpportunities() {}
+  async getUserOpportunities(userId: string) {
+    const opportunities = await this.prisma.opportunity.findMany({
+      where: { userId },
+    });
+
+    return opportunities;
+  }
+
   async createOpportunity(dto: CreateOpportunityDto, id: string) {
     const date = dto.date ? new Date(dto.date) : undefined;
     const opportunities = await this.prisma.opportunity.create({

@@ -26,20 +26,35 @@ export class OpportunitiesController {
 
   @Get()
   async getAllOpportunities() {
-    const opportunities = await this.opportunitiesService.getAllOpportunities();
-    return opportunities;
+    const data = await this.opportunitiesService.getAllOpportunities();
+    return {
+      status: 200,
+      message: 'Successfully find opportunities',
+      data,
+    };
   }
+
+  @Get('/my-opportunities')
+  @UseGuards(AuthGuard('jwt'))
+  async getAllUserOpportunities(@Req() request: IUserRequest) {
+    const data = await this.opportunitiesService.getUserOpportunities(
+      request.user.id,
+    );
+    return {
+      status: 200,
+      message: 'Successfully find user opportunities',
+      data,
+    };
+  }
+
   @Get('/:id')
   async getOpportunityById(@Param('id') id: string) {
-    const opportunities =
-      await this.opportunitiesService.getOpportunityById(id);
-    return opportunities;
-  }
-  @Get('/my-opportunities')
-  async getAllUserOpportunities() {
-    const opportunities =
-      await this.opportunitiesService.getAllUserOpportunities();
-    return opportunities;
+    const data = await this.opportunitiesService.getOpportunityById(id);
+    return {
+      status: 200,
+      message: 'Successfully find  opportunity by id',
+      data,
+    };
   }
 
   @Post()
@@ -49,11 +64,15 @@ export class OpportunitiesController {
     @Body() dto: CreateOpportunityDto,
     @Req() request: IUserRequest,
   ) {
-    const opportunities = await this.opportunitiesService.createOpportunity(
+    const data = await this.opportunitiesService.createOpportunity(
       dto,
       request.user.id,
     );
-    return opportunities;
+    return {
+      status: 201,
+      message: 'Successfully create opportunity ',
+      data,
+    };
   }
 
   @Patch('/:id')
@@ -64,12 +83,16 @@ export class OpportunitiesController {
     @Req() request: IUserRequest,
     @Param('id') id: string,
   ) {
-    const opportunities = await this.opportunitiesService.updateOpportunity(
+    const data = await this.opportunitiesService.updateOpportunity(
       dto,
       request.user.id,
       id,
     );
-    return opportunities;
+    return {
+      status: 200,
+      message: 'Successfully update opportunity ',
+      data,
+    };
   }
 
   @Delete('/:id')

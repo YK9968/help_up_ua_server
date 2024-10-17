@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'prisma.service';
-import { CreateUserDto } from 'src/auth/dto/authUser.dto';
+import { CreateUserDto, TUpdateUserDto } from 'src/auth/dto/authUser.dto';
 import * as bcrypt from 'bcrypt';
+import { AppErrors } from 'src/errors';
 
 @Injectable()
 export class UserService {
@@ -22,5 +23,16 @@ export class UserService {
       data: { ...dto, password: hashPassword },
     });
     return user;
+  }
+
+  async updateUser(dto: TUpdateUserDto, { email }: Partial<User>) {
+    const user = await this.findUser(email);
+    if (!user) throw new BadRequestException(AppErrors.USER_NOT_FOUND);
+    const newUser = await this.prisma.user.update({
+      where: { id: user.id },
+      data: { ...dto },
+    });
+
+    return newUser;
   }
 }
