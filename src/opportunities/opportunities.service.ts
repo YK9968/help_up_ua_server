@@ -50,13 +50,19 @@ export class OpportunitiesService {
     const opportunities = await this.prisma.opportunity.create({
       data: {
         userId: id,
+        title: dto.title,
+        description: dto.description,
+        location: dto.location,
+        organizationName: dto.organizationName,
+        website: dto.website,
+        email: dto.email,
         date,
-        ...dto,
+        typeWork: dto.typeWork,
+        imageUrl: dto.imageUrl,
       },
     });
     return opportunities;
   }
-
   async updateOpportunity(
     dto: TUpdateOpportunityDto,
     userId: string,
@@ -71,7 +77,6 @@ export class OpportunitiesService {
 
     return opportunity;
   }
-
   async deleteOpportunity(userId: string, id: string): Promise<void> {
     await this.findOpportunity(id, userId);
 
