@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateOpportunityDto,
-  TUpdateOpportunityDto,
+  UpdateOpportunityDto,
 } from './dto/createOpportunity.dto';
 import { PrismaService } from 'prisma.service';
 import { Opportunity } from '@prisma/client';
@@ -64,7 +64,7 @@ export class OpportunitiesService {
     return opportunities;
   }
   async updateOpportunity(
-    dto: TUpdateOpportunityDto,
+    dto: UpdateOpportunityDto,
     userId: string,
     id: string,
   ): Promise<Opportunity> {

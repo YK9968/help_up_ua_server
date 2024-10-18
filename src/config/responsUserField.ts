@@ -8,3 +8,9 @@ export const responseUserField = (user: User) => {
     email,
   };
 };
+
+export type responseField<T = unknown> = {
+  status: number;
+  message: string;
+  data?: T;
+};

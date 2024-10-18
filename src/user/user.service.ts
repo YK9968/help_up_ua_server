@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { PrismaService } from 'prisma.service';
-import { CreateUserDto, TUpdateUserDto } from 'src/auth/dto/authUser.dto';
+import { CreateUserDto, UpdateUserDto } from 'src/auth/dto/authUser.dto';
 import * as bcrypt from 'bcrypt';
 import { AppErrors } from 'src/errors';
 import { responseUserField } from 'src/config/responsUserField';
@@ -26,7 +26,7 @@ export class UserService {
     return user;
   }
 
-  async updateUser(dto: TUpdateUserDto, { email }: Partial<User>) {
+  async updateUser(dto: UpdateUserDto, { email }: Partial<User>) {
     const user = await this.findUser(email);
     if (!user) throw new BadRequestException(AppErrors.USER_NOT_FOUND);
     const newUser = await this.prisma.user.update({

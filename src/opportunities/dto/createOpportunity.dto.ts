@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsString,
   IsEmail,
@@ -8,42 +9,129 @@ import {
 } from 'class-validator';
 
 export class CreateOpportunityDto {
+  @ApiProperty()
   @IsString({ message: 'Title must be a string' })
   @IsNotEmpty({ message: 'Title is required' })
   @MinLength(3, { message: 'Title must be at least 3 characters long' })
   title: string;
 
+  @ApiProperty()
   @IsString({ message: 'Organization name must be a string' })
   @IsNotEmpty({ message: 'Organization name is required' })
   organizationName: string;
 
+  @ApiProperty({ required: false })
   @IsUrl()
   @IsOptional()
   website?: string;
 
+  @ApiProperty()
   @IsEmail({}, { message: 'Invalid email format' })
   @IsNotEmpty({ message: 'Email is required' })
   email: string;
 
+  @ApiProperty()
   @IsString({ message: 'Description must be a string' })
   @IsNotEmpty({ message: 'Description is required' })
   description: string;
 
+  @ApiProperty({ required: false })
   @IsString({ message: 'Date must be a valid date' })
   @IsOptional()
   date?: string;
 
+  @ApiProperty()
   @IsString({ message: 'Type of work must be a string' })
   @IsNotEmpty({ message: 'Type of work is required' })
   typeWork: string;
 
+  @ApiProperty({ required: false })
   @IsUrl()
   @IsOptional()
   imageUrl?: string;
 
+  @ApiProperty()
   @IsString({ message: 'Location must be a string' })
   @IsNotEmpty({ message: 'Location is required' })
   location: string;
 }
 
-export type TUpdateOpportunityDto = Partial<CreateOpportunityDto>;
+export class UpdateOpportunityDto {
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Title must be a string' })
+  @IsOptional()
+  @MinLength(3, { message: 'Title must be at least 3 characters long' })
+  title?: string;
+
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Organization name must be a string' })
+  @IsOptional()
+  organizationName?: string;
+
+  @ApiProperty({ required: false })
+  @IsUrl()
+  @IsOptional()
+  website?: string;
+
+  @ApiProperty({ required: false })
+  @IsEmail({}, { message: 'Invalid email format' })
+  @IsOptional()
+  email?: string;
+
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Description must be a string' })
+  @IsOptional()
+  description?: string;
+
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Date must be a valid date' })
+  @IsOptional()
+  date?: string;
+
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Type of work must be a string' })
+  @IsOptional()
+  typeWork?: string;
+
+  @ApiProperty({ required: false })
+  @IsUrl()
+  @IsOptional()
+  imageUrl?: string;
+
+  @ApiProperty({ required: false })
+  @IsString({ message: 'Location must be a string' })
+  @IsOptional()
+  location?: string;
+}
+
+export class OpportunityDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  organizationName: string;
+
+  @ApiProperty({ required: false })
+  website?: string;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  date: Date;
+
+  @ApiProperty()
+  typeWork: string;
+
+  @ApiProperty({ required: false })
+  imageUrl?: string;
+
+  @ApiProperty()
+  location: string;
+}
