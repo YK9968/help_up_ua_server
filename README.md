@@ -1,85 +1,197 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# HelpUpUA Server
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This project is the backend for the **HelpUpUA** volunteering platform, which allows users to register, log in, and create and manage volunteering opportunities. **Empowering communities through volunteering!**
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Table of Contents
 
-## Description
+- [Technologies](#technologies)
+- [Installation](#installation)
+- [Scripts](#scripts)
+- [API Usage](#api-usage)
+  - [Authentication](#authentication)
+  - [Opportunities](#opportunities)
+- [Development Tools](#development-tools)
+- [Testing](#testing)
+- [Contribution](#contribution)
+- [License](#license)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Technologies
 
-## Project setup
+- **Node.js**: JavaScript runtime for building server-side applications.
+- **NestJS**: Framework for building efficient, scalable Node.js server-side applications.
+- **TypeScript**: A superset of JavaScript that compiles to clean JavaScript output.
+- **Prisma**: Open-source database toolkit simplifying database access and management.
+- **Swagger**: For API documentation.
+- **class-validator**: For data validation.
+
+## Installation
+
+1. **Clone the repository**:
+
+   ```bash
+   git clone https://github.com/YK9968/help_up_ua_server.git
+   cd help_up_ua_server
+
+   ```
+
+2. **Install dependencies**
+
+`npm install` or `yarn install`
+
+3. **Set up environment variables:**
+   Create a .env file based on .env.example and configure it according to your environment.
+   Start the server: `npm run start:dev`
+
+## Scripts
+
+`npm run build`: Compiles the project into JavaScript.
+`npm run format`: Formats the code using Prettier.
+`npm run lint`: Runs ESLint to check the code.
+`npm run test`: Runs tests using Jest.
+`npm run test`:watch: Runs tests in watch mode.
+`npm run test`:cov: Generates a test coverage report.
+
+## API Usage
+
+### Authentication
+
+### Register User
+
+- **Method:** POST
+- **URL:** `/auth/register`
+- **Request Body:**
+  ```json
+  {
+    "firstName": "FirstName",
+    "lastName": "LastName",
+    "email": "example@mail.com",
+    "password": "Password123",
+    "phone": "1234567890",
+    "age": 25,
+    "isCompany": false
+  }
+  ```
+
+### Login User
+
+- **Method:** POST
+- **URL:** `/auth/login`
+- **Request Body:**
+
+  ```json
+  {
+    "email": "example@mail.com",
+    "password": "Password123"
+  }
+  ```
+
+  ### Get New Tokens
+
+- **Method:** POST
+- **URL:** `/auth/acces-token`
+- **Request Body:**
+
+  ```json
+  {
+    "refreshToken": "Your refresh token"
+  }
+  ```
+
+### Opportunities
+
+### Get All Opportunities
+
+- **Method:** GET
+- **URL:** `/opportunities`
+
+### Get User Opportunities
+
+- **Method:** GET
+- **URL:** `/my-opportunities`
+- **Authentication Required**: Yes
+
+### Get Opportunity by ID
+
+- **Method:** GET
+- **URL:** `/opportunities/:id`
+
+### Create Opportunity
+
+- **Method:** POST
+- **URL:** `/opportunities`
+- **Request Body:**
+
+  ```json
+  {
+    "title": "Opportunity Title",
+    "organizationName": "Organization Name",
+    "website": "https://example.com",
+    "email": "contact@example.com",
+    "description": "Opportunity description.",
+    "date": "2024-10-20",
+    "typeWork": "Volunteer",
+    "imageUrl": "https://example.com/image.jpg",
+    "location": "City, Country"
+  }
+  ```
+
+  ### Update Opportunity
+
+- **Method:** PATCH
+- **URL:** `/opportunities/:id`
+- **Request Body:**
+
+  ```json
+  {
+    "title": "Opportunity Title",
+    "organizationName": "Organization Name",
+    "website": "https://example.com",
+    "email": "contact@example.com",
+    "description": "Opportunity description.",
+    "date": "2024-10-20",
+    "typeWork": "Volunteer",
+    "imageUrl": "https://example.com/image.jpg",
+    "location": "City, Country"
+  }
+  ```
+
+### Delete Opportunity
+
+- **Method:** DELETE
+- **URL:** `/opportunities/:id`
+
+## Testing
+
+To run the tests, use the following command:
 
 ```bash
-$ npm install
+npm run test
 ```
 
-## Compile and run the project
+## Contribution
 
-```bash
-# development
-$ npm run start
+We welcome contributions to the HelpUpUA Server! To contribute, please follow these steps:
 
-# watch mode
-$ npm run start:dev
+1. **Fork the repository**: Click on the "Fork" button in the top right corner of the repository page.
+2. **Create your branch**:
 
-# production mode
-$ npm run start:prod
-```
+   ```bash
+   git checkout -b feature/YourFeature
+   ```
 
-## Run tests
+## Development Tools
 
-```bash
-# unit tests
-$ npm run test
+- **NestJS**: Framework for building efficient, scalable Node.js server-side applications.
+- **TypeScript**: A superset of JavaScript that compiles to clean JavaScript output.
+- **Prettier**: An opinionated code formatter.
+- **ESLint**: A static code analysis tool for identifying problematic patterns in JavaScript code.
+- **Jest**: A delightful JavaScript testing framework with a focus on simplicity.
+- **Supertest**: A library for testing HTTP servers.
+- **Prisma**: An open-source database toolkit that simplifies database access and management.
+- **ts-jest**: A TypeScript preprocessor for Jest.
 
-# e2e tests
-$ npm run test:e2e
+### License
 
-# test coverage
-$ npm run test:cov
-```
+This project is licensed under the MIT License.
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Thank you for using HelpUpUA Server! For more information or to contribute, please refer to the documentation or contact the project maintainers.
