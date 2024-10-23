@@ -47,6 +47,7 @@ export class OpportunitiesService {
     id: string,
   ): Promise<Opportunity> {
     const date = dto.date ? new Date(dto.date) : undefined;
+    const imageUrl = dto.imageUrl || null;
     const opportunities = await this.prisma.opportunity.create({
       data: {
         userId: id,
@@ -58,7 +59,7 @@ export class OpportunitiesService {
         email: dto.email,
         date,
         typeWork: dto.typeWork,
-        imageUrl: dto.imageUrl,
+        imageUrl,
       },
     });
     return opportunities;

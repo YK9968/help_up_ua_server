@@ -8,7 +8,9 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -23,6 +25,11 @@ import { IUserRequest } from './config/types';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Opportunity } from '@prisma/client';
 import { responseField } from 'src/config/responsUserField';
+
+import { Express } from 'express';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { saveFileToCloud } from 'src/utils/saveImgToCloud';
 
 @ApiTags('Opportunities')
 @Controller('opportunities')
@@ -81,10 +88,22 @@ export class OpportunitiesController {
     };
   }
 
-  @Post()
+  @Post('my-opportunities')
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard('jwt'))
   @ApiBody({ type: CreateOpportunityDto })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: 'src/uploads',
+        filename: (req, file, cb) => {
+          const uniquePreffix = Date.now();
+          const filename = `${uniquePreffix}_${file.originalname}`;
+          cb(null, filename);
+        },
+      }),
+    }),
+  )
   @ApiResponse({
     status: 201,
     description: 'create opportunity ',
@@ -92,10 +111,17 @@ export class OpportunitiesController {
   })
   async createOpportunity(
     @Body() dto: CreateOpportunityDto,
+    @UploadedFile() image: Express.Multer.File,
     @Req() request: IUserRequest,
   ): Promise<responseField<Opportunity>> {
+    const imageUrl = image
+      ? await saveFileToCloud(image.path, 'opportunities_img')
+      : null;
+
+    // треба дописати функцію котра буде видаляти з папки на пк якщо успішно додалось в клауденері
+
     const data = await this.opportunitiesService.createOpportunity(
-      dto,
+      { ...dto, imageUrl },
       request.user.id,
     );
     return {
@@ -105,7 +131,7 @@ export class OpportunitiesController {
     };
   }
 
-  @Patch('/:id')
+  @Patch('my-opportunities/:id')
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard('jwt'))
   @ApiBody({ type: UpdateOpportunityDto })
@@ -131,7 +157,7 @@ export class OpportunitiesController {
     };
   }
 
-  @Delete('/:id')
+  @Delete('my-opportunities/:id')
   @HttpCode(204)
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
