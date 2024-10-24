@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -43,12 +44,21 @@ export class OpportunitiesController {
     description: 'get all opportunities ',
     type: [OpportunityDto],
   })
-  async getAllOpportunities(): Promise<responseField<Opportunity[]>> {
-    const data = await this.opportunitiesService.getAllOpportunities();
+  async getAllOpportunities(
+    @Query('page') page = 1,
+    @Query('limit') limit = 5,
+  ): Promise<responseField<Opportunity[]>> {
+    const [data, total] = await this.opportunitiesService.getAllOpportunities(
+      page,
+      limit,
+    );
     return {
       status: 200,
       message: 'Successfully find opportunities',
       data,
+      total,
+      page,
+      limit,
     };
   }
 

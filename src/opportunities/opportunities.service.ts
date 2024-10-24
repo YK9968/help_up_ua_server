@@ -24,9 +24,22 @@ export class OpportunitiesService {
     return opportunity;
   }
 
-  async getAllOpportunities(): Promise<Opportunity[]> {
-    const opportunities = await this.prisma.opportunity.findMany();
-    return opportunities;
+  async getAllOpportunities(
+    page: number,
+    limit: number,
+  ): Promise<[Opportunity[], number]> {
+    const parsedPage = Math.max(1, page);
+    const parsedLimit = Math.max(1, limit);
+    const skip = (parsedPage - 1) * parsedLimit;
+
+    const opportunities = await this.prisma.opportunity.findMany({
+      skip,
+      take: parsedLimit,
+    });
+
+    const total = await this.prisma.opportunity.count();
+
+    return [opportunities, total];
   }
 
   async getOpportunityById(id: string): Promise<Opportunity> {

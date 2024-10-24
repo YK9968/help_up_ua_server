@@ -13,4 +13,7 @@ export type responseField<T = unknown> = {
   status: number;
   message: string;
   data?: T;
+  total?: number;
+  page?: number;
+  limit?: number;
 };
