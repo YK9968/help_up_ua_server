@@ -14,6 +14,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { promises as fs } from 'fs';
 import { OpportunitiesService } from './opportunities.service';
 import {
   CreateOpportunityDto,
@@ -114,11 +115,12 @@ export class OpportunitiesController {
     @UploadedFile() image: Express.Multer.File,
     @Req() request: IUserRequest,
   ): Promise<responseField<Opportunity>> {
-    const imageUrl = image
-      ? await saveFileToCloud(image.path, 'opportunities_img')
-      : null;
+    let imageUrl: string | null = null;
 
-    // треба дописати функцію котра буде видаляти з папки на пк якщо успішно додалось в клауденері
+    if (image) {
+      imageUrl = await saveFileToCloud(image.path, 'opportunities_img');
+      await fs.unlink(image.path);
+    }
 
     const data = await this.opportunitiesService.createOpportunity(
       { ...dto, imageUrl },
@@ -135,6 +137,18 @@ export class OpportunitiesController {
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard('jwt'))
   @ApiBody({ type: UpdateOpportunityDto })
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: 'src/uploads',
+        filename: (req, file, cb) => {
+          const uniquePrefix = Date.now();
+          const filename = `${uniquePrefix}_${file.originalname}`;
+          cb(null, filename);
+        },
+      }),
+    }),
+  )
   @ApiResponse({
     status: 200,
     description: 'update opportunity ',
@@ -142,11 +156,22 @@ export class OpportunitiesController {
   })
   async updateOpportunity(
     @Body() dto: UpdateOpportunityDto,
+    @UploadedFile() image: Express.Multer.File,
     @Req() request: IUserRequest,
     @Param('id') id: string,
   ): Promise<responseField<Opportunity>> {
+    const existingOpportunity =
+      await this.opportunitiesService.getOpportunityById(id);
+
+    let imageUrl: string | null = existingOpportunity.imageUrl;
+
+    if (image) {
+      imageUrl = await saveFileToCloud(image.path, 'opportunities_img');
+      await fs.unlink(image.path);
+    }
+
     const data = await this.opportunitiesService.updateOpportunity(
-      dto,
+      { ...dto, imageUrl },
       request.user.id,
       id,
     );
