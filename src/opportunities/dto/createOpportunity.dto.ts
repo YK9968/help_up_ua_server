@@ -6,7 +6,9 @@ import {
   IsUrl,
   IsOptional,
   MinLength,
+  IsEnum,
 } from 'class-validator';
+import { VolunteerCategory } from '../config/types';
 
 export class CreateOpportunityDto {
   @ApiProperty()
@@ -40,10 +42,10 @@ export class CreateOpportunityDto {
   @IsOptional()
   date?: string;
 
-  @ApiProperty()
-  @IsString({ message: 'Type of work must be a string' })
+  @ApiProperty({ enum: VolunteerCategory })
+  @IsEnum(VolunteerCategory, { message: 'Type of work must be a valid option' })
   @IsNotEmpty({ message: 'Type of work is required' })
-  typeWork: string;
+  typeWork: VolunteerCategory;
 
   @ApiProperty({ required: false })
   @IsUrl()
@@ -88,10 +90,10 @@ export class UpdateOpportunityDto {
   @IsOptional()
   date?: string;
 
-  @ApiProperty({ required: false })
-  @IsString({ message: 'Type of work must be a string' })
-  @IsOptional()
-  typeWork?: string;
+  @ApiProperty({ enum: VolunteerCategory })
+  @IsEnum(VolunteerCategory, { message: 'Type of work must be a valid option' })
+  @IsNotEmpty({ message: 'Type of work is required' })
+  typeWork: VolunteerCategory;
 
   @ApiProperty({ required: false })
   @IsUrl()
