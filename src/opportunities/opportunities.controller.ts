@@ -21,7 +21,7 @@ import {
   CreateOpportunityDto,
   OpportunityDto,
   UpdateOpportunityDto,
-} from './dto/createOpportunity.dto';
+} from './dto/opportunity.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IUserRequest } from './config/types';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -47,10 +47,14 @@ export class OpportunitiesController {
   async getAllOpportunities(
     @Query('page') page = 1,
     @Query('limit') limit = 5,
+    @Query('categories') categories?: string | string[],
+    @Query('location') location?: string,
   ): Promise<responseField<Opportunity[]>> {
     const [data, total] = await this.opportunitiesService.getAllOpportunities(
       page,
       limit,
+      categories,
+      location,
     );
     return {
       status: 200,

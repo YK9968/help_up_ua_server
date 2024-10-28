@@ -14,7 +14,7 @@ import { UpdateUserDto } from 'src/auth/dto/authUser.dto';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { responseField } from 'src/config/responsUserField';
 import { User } from '@prisma/client';
-import { userDto } from './dto/userDto';
+import { userDto } from './dto/user.dto';
 
 @ApiTags('User')
 @Controller('user')

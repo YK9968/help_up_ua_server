@@ -2,9 +2,9 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateOpportunityDto,
   UpdateOpportunityDto,
-} from './dto/createOpportunity.dto';
+} from './dto/opportunity.dto';
 import { PrismaService } from 'prisma.service';
-import { Opportunity } from '@prisma/client';
+import { Opportunity, VolunteerCategory } from '@prisma/client';
 import { AppErrors } from 'src/errors';
 
 @Injectable()
@@ -25,19 +25,42 @@ export class OpportunitiesService {
   }
 
   async getAllOpportunities(
-    page: number,
-    limit: number,
+    page?: number,
+    limit?: number,
+    categories?: string | string[],
+    location?: string,
   ): Promise<[Opportunity[], number]> {
     const parsedPage = Math.max(1, page);
     const parsedLimit = Math.max(1, limit);
     const skip = (parsedPage - 1) * parsedLimit;
+    let where: any = {};
+
+    if (location) {
+      where.location = location;
+    }
+
+    if (categories) {
+      const categoryArray = Array.isArray(categories)
+        ? categories
+        : [categories];
+
+      where = {
+        typeWork: {
+          in: categoryArray.map(
+            (category: string) =>
+              VolunteerCategory[category as keyof typeof VolunteerCategory],
+          ),
+        },
+      };
+    }
 
     const opportunities = await this.prisma.opportunity.findMany({
+      where,
       skip,
       take: parsedLimit,
     });
 
-    const total = await this.prisma.opportunity.count();
+    const total = await this.prisma.opportunity.count({ where });
 
     return [opportunities, total];
   }
@@ -61,6 +84,7 @@ export class OpportunitiesService {
   ): Promise<Opportunity> {
     const date = dto.date ? new Date(dto.date) : undefined;
     const imageUrl = dto.imageUrl || null;
+
     const opportunities = await this.prisma.opportunity.create({
       data: {
         userId: id,
@@ -75,8 +99,10 @@ export class OpportunitiesService {
         imageUrl,
       },
     });
+
     return opportunities;
   }
+
   async updateOpportunity(
     dto: UpdateOpportunityDto,
     userId: string,

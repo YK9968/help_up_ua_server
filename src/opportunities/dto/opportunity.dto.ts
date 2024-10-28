@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { VolunteerCategory } from '@prisma/client';
 import {
   IsString,
   IsEmail,
@@ -8,7 +9,6 @@ import {
   MinLength,
   IsEnum,
 } from 'class-validator';
-import { VolunteerCategory } from '../config/types';
 
 export class CreateOpportunityDto {
   @ApiProperty()
