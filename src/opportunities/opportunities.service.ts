@@ -4,7 +4,7 @@ import {
   UpdateOpportunityDto,
 } from './dto/opportunity.dto';
 import { PrismaService } from 'prisma.service';
-import { Opportunity, VolunteerCategory } from '@prisma/client';
+import { Opportunity, VolunteerType } from '@prisma/client';
 import { AppErrors } from 'src/errors';
 
 @Injectable()
@@ -48,7 +48,7 @@ export class OpportunitiesService {
         typeWork: {
           in: categoryArray.map(
             (category: string) =>
-              VolunteerCategory[category as keyof typeof VolunteerCategory],
+              VolunteerType[category as keyof typeof VolunteerType],
           ),
         },
       };
