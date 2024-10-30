@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { VolunteerType } from '@prisma/client';
+
 import {
   IsString,
   IsEmail,
@@ -9,6 +10,18 @@ import {
   MinLength,
   IsEnum,
 } from 'class-validator';
+
+type VolunteerCategory =
+  | 'SOCIAL_ASSISTANCE'
+  | 'ENVIRONMENTAL_ACTIVITIES'
+  | 'EDUCATION_MENTORING'
+  | 'MEDICAL_SERVICES'
+  | 'SUPPORT_FOR_ELDERLY'
+  | 'ANIMAL_WELFARE'
+  | 'CULTURAL_INITIATIVES'
+  | 'HUMANITARIAN_MISSIONS'
+  | 'SPORTS_INITIATIVES'
+  | 'CRISIS_RESPONSE_VOLUNTEERING';
 
 export class CreateOpportunityDto {
   @ApiProperty()
@@ -45,7 +58,7 @@ export class CreateOpportunityDto {
   @ApiProperty({ enum: VolunteerType })
   @IsEnum(VolunteerType, { message: 'Type of work must be a valid option' })
   @IsNotEmpty({ message: 'Type of work is required' })
-  typeWork: VolunteerType;
+  typeWork: VolunteerCategory;
 
   @ApiProperty({ required: false })
   @IsUrl()
@@ -93,7 +106,7 @@ export class UpdateOpportunityDto {
   @ApiProperty({ enum: VolunteerType })
   @IsEnum(VolunteerType, { message: 'Type of work must be a valid option' })
   @IsNotEmpty({ message: 'Type of work is required' })
-  typeWork: VolunteerType;
+  typeWork: VolunteerCategory;
 
   @ApiProperty({ required: false })
   @IsUrl()
