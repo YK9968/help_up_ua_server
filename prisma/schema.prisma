@@ -32,19 +32,8 @@ model Opportunity {
   createdAt        DateTime      @default(now()) @map("created_at")
   updatedAt        DateTime      @updatedAt @map("updated_at")
   imageUrl         String?       @map("image_url")
-  typeWork         VolunteerType @map("type_work")
+  typeWork         String @map("type_work")
   user             User          @relation("UserOpportunities", fields: [userId], references: [id])
 }
 
-enum VolunteerType {
-  SOCIAL_ASSISTANCE
-  ENVIRONMENTAL_ACTIVITIES
-  EDUCATION_MENTORING
-  MEDICAL_SERVICES
-  SUPPORT_FOR_ELDERLY
-  ANIMAL_WELFARE
-  CULTURAL_INITIATIVES
-  HUMANITARIAN_MISSIONS
-  SPORTS_INITIATIVES
-  CRISIS_RESPONSE_VOLUNTEERING
-}
+

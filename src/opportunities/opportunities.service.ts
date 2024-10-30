@@ -4,8 +4,9 @@ import {
   UpdateOpportunityDto,
 } from './dto/opportunity.dto';
 import { PrismaService } from 'prisma.service';
-import { Opportunity, VolunteerType } from '@prisma/client';
+import { Opportunity } from '@prisma/client';
 import { AppErrors } from 'src/errors';
+import { VolunteerType } from './config/types';
 
 @Injectable()
 export class OpportunitiesService {
