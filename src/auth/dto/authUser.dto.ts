@@ -108,6 +108,11 @@ export class AuthResponseDto {
   @IsString()
   @IsOptional()
   email?: string;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsNotEmpty()
+  isCompany?: boolean;
 }
 
 export class AuthResponseTokensDto {

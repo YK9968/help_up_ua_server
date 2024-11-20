@@ -1,11 +1,12 @@
 import { User } from '@prisma/client';
 
 export const responseUserField = (user: User) => {
-  const { id, email, firstName } = user;
+  const { id, email, firstName, isCompany } = user;
   return {
     id,
     firstName,
     email,
+    isCompany,
   };
 };
 
