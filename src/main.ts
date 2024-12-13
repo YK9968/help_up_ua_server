@@ -17,7 +17,6 @@ async function bootstrap() {
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, documentFactory);
   app.setGlobalPrefix('api');
-  app.enableCors();
   app.useGlobalFilters(new AllExceptionsFilter());
   await app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
