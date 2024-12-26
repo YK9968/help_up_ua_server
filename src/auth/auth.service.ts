@@ -61,4 +61,15 @@ export class AuthService {
 
     return { accessToken, refreshToken };
   }
+
+  async refreshUser(refreshToken: string) {
+    try {
+      const result = await this.jwtService.verifyAsync(refreshToken);
+      const user = await this.userService.findUser(result.email);
+
+      return user;
+    } catch {
+      throw new UnauthorizedException(AppErrors.UNAUTHORIZE);
+    }
+  }
 }

@@ -86,23 +86,6 @@ export class OpportunitiesController {
     };
   }
 
-  @Get('/:id')
-  @ApiResponse({
-    status: 200,
-    description: 'get opportunity by id',
-    type: OpportunityDto,
-  })
-  async getOpportunityById(
-    @Param('id') id: string,
-  ): Promise<responseField<Opportunity>> {
-    const data = await this.opportunitiesService.getOpportunityById(id);
-    return {
-      status: 200,
-      message: 'Successfully find  opportunity by id',
-      data,
-    };
-  }
-
   @Post('my-opportunities')
   @UsePipes(new ValidationPipe())
   @UseGuards(AuthGuard('jwt'))
@@ -206,7 +189,8 @@ export class OpportunitiesController {
   async deleteOpportunity(
     @Req() request: IUserRequest,
     @Param('id') id: string,
-  ): Promise<void> {
+  ): Promise<string> {
     await this.opportunitiesService.deleteOpportunity(request.user.id, id);
+    return id;
   }
 }
