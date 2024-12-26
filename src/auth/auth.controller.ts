@@ -84,6 +84,7 @@ export class AuthController {
       id: data.id,
       emil: data.email,
       name: data.firstName,
+      isCompany: data.isCompany,
     };
 
     return {
