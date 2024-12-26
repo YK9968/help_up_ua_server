@@ -118,11 +118,13 @@ export class OpportunitiesService {
 
     return opportunity;
   }
-  async deleteOpportunity(userId: string, id: string): Promise<void> {
+  async deleteOpportunity(userId: string, id: string): Promise<string> {
     await this.findOpportunity(id, userId);
 
-    await this.prisma.opportunity.delete({
+    const data = await this.prisma.opportunity.delete({
       where: { id, userId },
     });
+
+    return data.id;
   }
 }

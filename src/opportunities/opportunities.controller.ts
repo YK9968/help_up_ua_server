@@ -3,7 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Param,
   Patch,
   Post,
@@ -180,7 +179,6 @@ export class OpportunitiesController {
   }
 
   @Delete('my-opportunities/:id')
-  @HttpCode(204)
   @UseGuards(AuthGuard('jwt'))
   @ApiResponse({
     status: 204,
@@ -189,8 +187,12 @@ export class OpportunitiesController {
   async deleteOpportunity(
     @Req() request: IUserRequest,
     @Param('id') id: string,
-  ): Promise<string> {
-    await this.opportunitiesService.deleteOpportunity(request.user.id, id);
-    return id;
+  ) {
+    const data = await this.opportunitiesService.deleteOpportunity(
+      request.user.id,
+      id,
+    );
+
+    return { id: data };
   }
 }
