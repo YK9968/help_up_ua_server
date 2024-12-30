@@ -84,7 +84,7 @@ export class OpportunitiesService {
     id: string,
   ): Promise<Opportunity> {
     const date = dto.date ? new Date(dto.date) : undefined;
-    const imageUrl = dto.imageUrl || null;
+    const imageUrl = typeof dto.imageUrl === 'string' ? dto.imageUrl : null;
 
     const opportunities = await this.prisma.opportunity.create({
       data: {
@@ -110,10 +110,11 @@ export class OpportunitiesService {
     id: string,
   ): Promise<Opportunity> {
     await this.findOpportunity(id, userId);
+    const imageUrl = typeof dto.imageUrl === 'string' ? dto.imageUrl : null;
 
     const opportunity = await this.prisma.opportunity.update({
       where: { id, userId },
-      data: { ...dto },
+      data: { ...dto, imageUrl },
     });
 
     return opportunity;
