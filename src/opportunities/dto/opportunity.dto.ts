@@ -49,9 +49,8 @@ export class CreateOpportunityDto {
   typeWork: VolunteerType;
 
   @ApiProperty({ required: false })
-  @IsUrl()
   @IsOptional()
-  imageUrl?: string;
+  imageUrl?: Express.Multer.File | string;
 
   @ApiProperty()
   @IsString({ message: 'Location must be a string' })
@@ -97,9 +96,8 @@ export class UpdateOpportunityDto {
   typeWork: VolunteerType;
 
   @ApiProperty({ required: false })
-  @IsUrl()
   @IsOptional()
-  imageUrl?: string;
+  imageUrl?: Express.Multer.File | string;
 
   @ApiProperty({ required: false })
   @IsString({ message: 'Location must be a string' })
