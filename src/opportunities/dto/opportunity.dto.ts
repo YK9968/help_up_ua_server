@@ -50,7 +50,7 @@ export class CreateOpportunityDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  imageUrl?: Express.Multer.File | string;
+  imageUrl?: string;
 
   @ApiProperty()
   @IsString({ message: 'Location must be a string' })
@@ -97,7 +97,7 @@ export class UpdateOpportunityDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  imageUrl?: Express.Multer.File | string;
+  imageUrl?: string;
 
   @ApiProperty({ required: false })
   @IsString({ message: 'Location must be a string' })

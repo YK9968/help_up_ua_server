@@ -156,6 +156,8 @@ export class OpportunitiesController {
     @Req() request: IUserRequest,
     @Param('id') id: string,
   ): Promise<responseField<Opportunity>> {
+    console.log(dto);
+
     const existingOpportunity =
       await this.opportunitiesService.getOpportunityById(id);
 
@@ -165,6 +167,8 @@ export class OpportunitiesController {
       imageUrl = await saveFileToCloud(image.path, 'opportunities_img');
       await fs.unlink(image.path);
     }
+
+    console.log(imageUrl);
 
     const data = await this.opportunitiesService.updateOpportunity(
       { ...dto, imageUrl },
