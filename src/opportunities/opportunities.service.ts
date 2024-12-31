@@ -109,15 +109,20 @@ export class OpportunitiesService {
     userId: string,
     id: string,
   ): Promise<Opportunity> {
-    await this.findOpportunity(id, userId);
-    const imageUrl = typeof dto.imageUrl === 'string' ? dto.imageUrl : null;
+    try {
+      await this.findOpportunity(id, userId);
+      const imageUrl = typeof dto.imageUrl === 'string' ? dto.imageUrl : null;
+      const date = dto.date ? new Date(dto.date).toISOString() : null;
 
-    const opportunity = await this.prisma.opportunity.update({
-      where: { id, userId },
-      data: { ...dto, imageUrl },
-    });
+      const opportunity = await this.prisma.opportunity.update({
+        where: { id, userId },
+        data: { ...dto, imageUrl, date },
+      });
 
-    return opportunity;
+      return opportunity;
+    } catch (error) {
+      console.log(error.message);
+    }
   }
   async deleteOpportunity(userId: string, id: string): Promise<string> {
     await this.findOpportunity(id, userId);

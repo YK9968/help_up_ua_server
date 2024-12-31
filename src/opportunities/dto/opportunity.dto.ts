@@ -8,6 +8,7 @@ import {
   IsOptional,
   MinLength,
   IsEnum,
+  IsISO8601,
 } from 'class-validator';
 import { VolunteerType } from '../config/types';
 
@@ -41,6 +42,7 @@ export class CreateOpportunityDto {
   @ApiProperty({ required: false })
   @IsString({ message: 'Date must be a valid date' })
   @IsOptional()
+  @IsISO8601()
   date?: string;
 
   @ApiProperty({ enum: VolunteerType })
@@ -88,6 +90,7 @@ export class UpdateOpportunityDto {
   @ApiProperty({ required: false })
   @IsString({ message: 'Date must be a valid date' })
   @IsOptional()
+  @IsISO8601()
   date?: string;
 
   @ApiProperty({ enum: VolunteerType })
@@ -97,7 +100,7 @@ export class UpdateOpportunityDto {
 
   @ApiProperty({ required: false })
   @IsOptional()
-  imageUrl?: string;
+  imageUrl?: string | File;
 
   @ApiProperty({ required: false })
   @IsString({ message: 'Location must be a string' })
