@@ -59,6 +59,9 @@ export class OpportunitiesService {
       where,
       skip,
       take: parsedLimit,
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     const total = await this.prisma.opportunity.count({ where });
@@ -73,7 +76,12 @@ export class OpportunitiesService {
 
   async getUserOpportunities(userId: string): Promise<Opportunity[]> {
     const opportunities = await this.prisma.opportunity.findMany({
-      where: { userId },
+      where: {
+        userId,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
     });
 
     return opportunities;
