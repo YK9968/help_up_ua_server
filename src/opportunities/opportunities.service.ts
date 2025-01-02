@@ -34,10 +34,13 @@ export class OpportunitiesService {
     const parsedPage = Math.max(1, page);
     const parsedLimit = Math.max(1, limit);
     const skip = (parsedPage - 1) * parsedLimit;
-    let where: any = {};
+    const where: any = {};
 
     if (location) {
-      where.location = location;
+      where.location = {
+        contains: location,
+        mode: 'insensitive',
+      };
     }
 
     if (categories) {
@@ -45,13 +48,11 @@ export class OpportunitiesService {
         ? categories
         : [categories];
 
-      where = {
-        typeWork: {
-          in: categoryArray.map(
-            (category: string) =>
-              VolunteerType[category as keyof typeof VolunteerType],
-          ),
-        },
+      where.typeWork = {
+        in: categoryArray.map(
+          (category: string) =>
+            VolunteerType[category as keyof typeof VolunteerType],
+        ),
       };
     }
 
